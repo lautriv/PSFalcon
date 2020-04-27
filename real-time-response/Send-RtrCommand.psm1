@@ -13,6 +13,9 @@ function Send-RtrCommand {
     .PARAMETER STRING
         Command string (text that follows the 'base command')
 
+    .PARAMETER RAWCOMMAND
+        Raw PowerShell string to execute with runscript
+
     .PARAMETER TIMEOUT
         Time to wait for the command request in seconds [default: 30, maximum 600]
 
@@ -37,6 +40,9 @@ function Send-RtrCommand {
         $Command,
 
         [string]
+        $RawCommand,
+
+        [string]
         $String,
 
         [ValidateRange(30,600)]
@@ -54,6 +60,12 @@ function Send-RtrCommand {
         'reg load', 'reg unload', 'reg set', 'restart', 'rm', 'shutdown', 'unmap', 'xmemdump', 'zip')
     }
     process{
+        if ($null -ne $RawCommand){
+            $FullCommand = ($Command + " {0}{1}{2}" -f '-Raw=```', $RawCommand, '```')
+        }
+        else {
+            $FullCommand = ($Command + ' ' + $String)
+        }
         $Param = @{
             Method = 'post'
             Header = @{
@@ -63,7 +75,7 @@ function Send-RtrCommand {
             Body = @{
                 base_command = $Command
                 batch_id = $Id
-                command_string = ($Command + ' ' + $String)
+                command_string = $FullCommand
             }
         }
         if ($Command -cin $Admin) {

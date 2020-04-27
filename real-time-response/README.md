@@ -214,6 +214,8 @@ Batch executes a RTR command across the hosts mapped to the given batch ID
 
 `-String`: Command string (text that follows the 'base command')
 
+`-RawCommand`: Raw PowerShell string to execute with runscript
+
 `-Timeout`: Time to wait for the command request in seconds [default: 30, maximum 600]
 
 `-Optional`: List of a subset of hosts we want to run the command on. If this list is supplied, only
@@ -222,6 +224,10 @@ these hosts will receive the command
 ### Example
 ```powershell
 PS> Send-RtrCommand -Id <string> -Command <string> -String <string>
+```
+
+```powershell
+PS> Send-RtrCommand -Id <string> -Command runscript -RawCommand <string> -String <string>
 ```
 
 # Send-RtrGet
